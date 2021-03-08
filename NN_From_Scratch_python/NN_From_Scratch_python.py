@@ -168,6 +168,7 @@ def grad_parameters(img,lab,init_parameters):
 
 # test b1
 def test_b1(h):
+	h = 0.0001
 	for i in range(10):
 		img_i = np.random.randint(train_num)
 		test_parameters = init_parameters()
@@ -180,6 +181,7 @@ def test_b1(h):
 # test b0
 def test_b0(h):
 	grad_list = []
+	h = 0.0001
 	for i in range(784):
 		img_i = np.random.randint(train_num)
 		test_parameters = init_parameters()
@@ -193,6 +195,7 @@ def test_b0(h):
 # test w1
 def test_w1(h):
 	grad_list = []
+	h = 0.0001
 	for i in range(784):
 		for j in range(10):
 			img_i = np.random.randint(train_num)
