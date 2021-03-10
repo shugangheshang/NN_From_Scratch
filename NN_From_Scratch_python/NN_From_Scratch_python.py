@@ -242,12 +242,26 @@ def learn_self(learn_rate):
 		global parameters
 		grad_tmp = train_batch(i,parameters)
 		parameters = combine_parameters(parameters,grad_tmp,learn_rate)
+# 
+lr_list = []                   # 不同学习率对应的的不同训练集的损失值
+# 相同parameters下的不同学习率，训练集的损失值绘制，目的是为了寻找合适的学习率
+def learn_rate_show(grad_lr,lowerr = -5,upper = 2,step = 1):
+    for lr_pow in np.linspace(lowerr,upper,num=np.int((upper-lowerr)/step+1)):
+        learn_rate = 10**lr_pow
+        parameters_tmp = combine_parameters(parameters,grad_lr,learn_rate)
+        train_loss_tmp = train_loss(parameters_tmp)
+        lr_list.append([lr_pow,train_loss_tmp])
+    upperr = len(lr_list)
+    plt.plot(np.array(lr_list)[:upperr,0],np.array(lr_list)[:upperr,1],color='blue')
+    plt.show()
 
 parameters = init_parameters()
 valid_accuracy(parameters)
 learn_self(1);
 valid_accuracy(parameters)
-
+rand_batch = np.random.randint(train_num//batch_size)
+grad_lr = train_batch(rand_batch,parameters)
+learn_rate_show(grad_lr,lowerr = -1.5,upper = 0,step = 0.1)
 # train_batch(0,parameters)
 # print(valid_loss(parameters))
 # valid_accuracy(parameters)
