@@ -217,7 +217,7 @@ def valid_accuracy(parameters):
 
 # 每组个数
 batch_size=100
-
+# 每batch_size个数据，正向传播计算出的损失函数对w1,b1,b0的梯度平均值
 def train_batch(current_batch,parameters):
 	grad_accu = grad_parameters(train_img[current_batch*batch_size+0],train_lab[current_batch*batch_size+0],parameters)
 	for img_i in range(1,batch_size):
@@ -227,7 +227,7 @@ def train_batch(current_batch,parameters):
 	for key in grad_accu.keys():
 		grad_accu[key]/=batch_size
 	return grad_accu
-
+# 在正向传播计算出的梯度平均值参数基础上，用反向传播更新出新的w1,b1,w0
 def combine_parameters(parameters,grad,learn_rate):
 	parameter_tmp = copy.deepcopy(parameters)
 	parameter_tmp[0]['b'] -= learn_rate*grad['b0']
@@ -235,6 +235,7 @@ def combine_parameters(parameters,grad,learn_rate):
 	parameter_tmp[1]['w'] -= learn_rate*grad['w1']
 	return parameter_tmp
 
+# 训练数据集分组训练一次获得的parameters
 def learn_self(learn_rate):
 	for i in range(train_num//batch_size):
 		if i%100 == 99:
@@ -259,6 +260,8 @@ parameters = init_parameters()
 valid_accuracy(parameters)
 learn_self(1);
 valid_accuracy(parameters)
+
+# 相同parameters下的不同学习率，训练集的损失值绘制，目的是为了寻找合适的学习率
 rand_batch = np.random.randint(train_num//batch_size)
 grad_lr = train_batch(rand_batch,parameters)
 learn_rate_show(grad_lr,lowerr = -1.5,upper = 0,step = 0.1)
